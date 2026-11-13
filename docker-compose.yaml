@@ -1,0 +1,30 @@
+services:
+  grafana:
+    image: ${GRAFANA_IMAGE:-grafana/grafana:13.3.1}
+    container_name: coremetry-grafana-dev
+    restart: unless-stopped
+    ports:
+      - '127.0.0.1:3001:3000'
+    environment:
+      GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER:?Set GRAFANA_ADMIN_USER in .env}
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:?Set a unique local password in .env}
+      GF_USERS_ALLOW_SIGN_UP: 'false'
+      GF_AUTH_ANONYMOUS_ENABLED: 'false'
+      GF_DEFAULT_APP_MODE: development
+      GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS: coremetry-datasource
+      COREMETRY_API_TOKEN: ${COREMETRY_API_TOKEN:-}
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./dist:/var/lib/grafana/plugins/coremetry-datasource:ro
+      - ./provisioning/datasources:/etc/grafana/provisioning/datasources:ro
+      - ./provisioning/dashboards:/etc/grafana/provisioning/dashboards:ro
+    networks:
+      - coremetry
+
+volumes:
+  grafana-data:
+
+networks:
+  coremetry:
+    external: true
+    name: coremetry_default

@@ -1,0 +1,33 @@
+{
+  "$schema": "https://raw.githubusercontent.com/grafana/grafana/main/docs/sources/developers/plugins/plugin.schema.json",
+  "type": "datasource",
+  "name": "Coremetry",
+  "id": "coremetry-datasource",
+  "metrics": false,
+  "backend": true,
+  "executable": "gpx_datasource",
+  "info": {
+    "description": "Coremetry datasource plugin scaffold; query execution is planned for Phase 3.",
+    "author": {
+      "name": "Coremetry"
+    },
+    "keywords": ["coremetry", "datasource", "observability"],
+    "logos": {
+      "small": "img/logo.svg",
+      "large": "img/logo.svg"
+    },
+    "links": [
+      {
+        "name": "Coremetry",
+        "url": "https://github.com/cosretr/coremetry"
+      }
+    ],
+    "screenshots": [],
+    "version": "%VERSION%",
+    "updated": "%TODAY%"
+  },
+  "dependencies": {
+    "grafanaDependency": ">=13.2.0",
+    "plugins": []
+  }
+}

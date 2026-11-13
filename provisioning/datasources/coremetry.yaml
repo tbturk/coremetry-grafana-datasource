@@ -1,0 +1,12 @@
+apiVersion: 1
+
+datasources:
+  - name: Coremetry
+    type: coremetry-datasource
+    uid: coremetry
+    access: proxy
+    url: http://coremetry:8088
+    editable: true
+    jsonData: {}
+    secureJsonData:
+      apiToken: $__env{COREMETRY_API_TOKEN}

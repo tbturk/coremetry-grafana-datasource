@@ -1,0 +1,27 @@
+{
+  "id": null,
+  "uid": "coremetry-dev",
+  "title": "Coremetry datasource development",
+  "tags": ["coremetry", "development"],
+  "timezone": "browser",
+  "schemaVersion": 41,
+  "version": 1,
+  "refresh": "",
+  "panels": [
+    {
+      "id": 1,
+      "type": "text",
+      "title": "Datasource scaffold",
+      "gridPos": { "h": 6, "w": 24, "x": 0, "y": 0 },
+      "options": {
+        "mode": "markdown",
+        "content": "The Coremetry datasource is provisioned. Metric queries are intentionally not implemented in Phase 2."
+      }
+    }
+  ],
+  "time": { "from": "now-6h", "to": "now" },
+  "timepicker": {},
+  "templating": { "list": [] },
+  "annotations": { "list": [] },
+  "links": []
+}
