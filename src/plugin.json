@@ -3,15 +3,17 @@
   "type": "datasource",
   "name": "Coremetry",
   "id": "coremetry-datasource",
-  "metrics": false,
+  "metrics": true,
+  "logs": true,
+  "tracing": true,
   "backend": true,
   "executable": "gpx_datasource",
   "info": {
-    "description": "Coremetry datasource plugin scaffold; query execution is planned for Phase 3.",
+    "description": "Coremetry datasource plugin for querying metrics, services, traces, and logs.",
     "author": {
       "name": "Coremetry"
     },
-    "keywords": ["coremetry", "datasource", "observability"],
+    "keywords": ["coremetry", "datasource", "observability", "metrics", "promql", "apm", "logs", "traces"],
     "logos": {
       "small": "img/logo.svg",
       "large": "img/logo.svg"

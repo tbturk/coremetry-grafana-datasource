@@ -1,0 +1,124 @@
+{
+  "id": null,
+  "uid": "coremetry-logs-traces",
+  "title": "Coremetry Logs and Traces",
+  "tags": ["coremetry", "apm", "logs", "traces", "correlation"],
+  "timezone": "browser",
+  "schemaVersion": 41,
+  "version": 1,
+  "refresh": "1m",
+  "templating": {
+    "list": [
+      {
+        "name": "service",
+        "label": "Service",
+        "type": "query",
+        "datasource": {
+          "type": "coremetry-datasource",
+          "uid": "coremetry"
+        },
+        "query": "services()",
+        "current": {
+          "selected": true,
+          "text": "All",
+          "value": "$__all"
+        },
+        "refresh": 1,
+        "includeAll": true,
+        "multi": false
+      },
+      {
+        "name": "search",
+        "label": "Log Search",
+        "type": "textbox",
+        "current": {
+          "selected": true,
+          "text": "",
+          "value": ""
+        }
+      },
+      {
+        "name": "trace_id",
+        "label": "Trace ID",
+        "type": "textbox",
+        "current": {
+          "selected": true,
+          "text": "",
+          "value": ""
+        }
+      }
+    ]
+  },
+  "panels": [
+    {
+      "id": 1,
+      "type": "logs",
+      "title": "Application Logs",
+      "description": "Correlated application logs with 1-click navigation to Tempo traces",
+      "gridPos": { "h": 14, "w": 24, "x": 0, "y": 0 },
+      "datasource": {
+        "type": "coremetry-datasource",
+        "uid": "coremetry"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "coremetry-datasource",
+            "uid": "coremetry"
+          },
+          "queryType": "logs",
+          "service": "${service:regex}",
+          "search": "$search",
+          "traceId": "$trace_id",
+          "limit": 200
+        }
+      ],
+      "options": {
+        "showLabels": true,
+        "wrapLogMessage": true,
+        "enableLogDetails": true,
+        "sortOrder": "Descending"
+      }
+    },
+    {
+      "id": 2,
+      "type": "table",
+      "title": "Recent Traces",
+      "description": "Traces matching filter criteria with links to Tempo detail view",
+      "gridPos": { "h": 10, "w": 24, "x": 0, "y": 14 },
+      "datasource": {
+        "type": "coremetry-datasource",
+        "uid": "coremetry"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "coremetry-datasource",
+            "uid": "coremetry"
+          },
+          "queryType": "traces",
+          "service": "${service:regex}",
+          "traceId": "$trace_id",
+          "limit": 50
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "custom": { "align": "auto", "cellOptions": { "type": "auto" } }
+        },
+        "overrides": [
+          {
+            "matcher": { "id": "byName", "options": "duration_ms" },
+            "properties": [{ "id": "unit", "value": "ms" }]
+          }
+        ]
+      }
+    }
+  ],
+  "time": { "from": "now-6h", "to": "now" },
+  "timepicker": {},
+  "annotations": { "list": [] },
+  "links": []
+}

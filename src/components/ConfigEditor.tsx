@@ -6,13 +6,23 @@ import { CoremetryDataSourceOptions, CoremetrySecureJsonData } from '../types';
 type Props = DataSourcePluginOptionsEditorProps<CoremetryDataSourceOptions, CoremetrySecureJsonData>;
 
 export function ConfigEditor({ onOptionsChange, options }: Props) {
-  const { secureJsonData } = options;
+  const { secureJsonData, jsonData } = options;
   const secureJsonFields = options.secureJsonFields ?? {};
 
   const onUrlChange = (event: ChangeEvent<HTMLInputElement>) => {
     onOptionsChange({
       ...options,
       url: event.target.value,
+    });
+  };
+
+  const onTraceDatasourceUidChange = (event: ChangeEvent<HTMLInputElement>) => {
+    onOptionsChange({
+      ...options,
+      jsonData: {
+        ...jsonData,
+        traceDatasourceUid: event.target.value,
+      },
     });
   };
 
@@ -71,6 +81,21 @@ export function ConfigEditor({ onOptionsChange, options }: Props) {
           width={40}
           onReset={onResetApiToken}
           onChange={onApiTokenChange}
+        />
+      </InlineField>
+      <InlineField
+        label="Trace datasource UID"
+        labelWidth={20}
+        interactive
+        tooltip="UID of the Grafana Tempo datasource connected to Coremetry (/tempo). Used for trace correlation links."
+      >
+        <Input
+          id="config-editor-trace-ds-uid"
+          aria-label="Trace datasource UID"
+          onChange={onTraceDatasourceUidChange}
+          value={jsonData?.traceDatasourceUid ?? ''}
+          placeholder="coremetry-tempo"
+          width={40}
         />
       </InlineField>
     </>

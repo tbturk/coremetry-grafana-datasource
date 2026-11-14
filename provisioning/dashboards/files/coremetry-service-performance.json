@@ -1,0 +1,201 @@
+{
+  "id": null,
+  "uid": "coremetry-service-performance",
+  "title": "Coremetry Service Performance",
+  "tags": ["coremetry", "apm", "services", "red"],
+  "timezone": "browser",
+  "schemaVersion": 41,
+  "version": 1,
+  "refresh": "1m",
+  "templating": {
+    "list": [
+      {
+        "name": "service",
+        "label": "Service",
+        "type": "query",
+        "datasource": {
+          "type": "coremetry-datasource",
+          "uid": "coremetry"
+        },
+        "query": "services()",
+        "current": {
+          "selected": true,
+          "text": "coremetry-monolithic",
+          "value": "coremetry-monolithic"
+        },
+        "refresh": 1,
+        "includeAll": false,
+        "multi": false
+      }
+    ]
+  },
+  "panels": [
+    {
+      "id": 1,
+      "type": "timeseries",
+      "title": "Throughput / Request Rate (RED)",
+      "description": "Request rate (req/s) for the selected service",
+      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 0 },
+      "datasource": {
+        "type": "coremetry-datasource",
+        "uid": "coremetry"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "coremetry-datasource",
+            "uid": "coremetry"
+          },
+          "queryType": "red",
+          "service": "$service",
+          "redMetric": "rate"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "custom": { "drawStyle": "line", "lineInterpolation": "linear" },
+          "unit": "reqps"
+        },
+        "overrides": []
+      }
+    },
+    {
+      "id": 2,
+      "type": "timeseries",
+      "title": "Failure Rate (RED)",
+      "description": "Percentage of requests resulting in error for the selected service",
+      "gridPos": { "h": 8, "w": 8, "x": 8, "y": 0 },
+      "datasource": {
+        "type": "coremetry-datasource",
+        "uid": "coremetry"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "coremetry-datasource",
+            "uid": "coremetry"
+          },
+          "queryType": "red",
+          "service": "$service",
+          "redMetric": "error_rate"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "custom": { "drawStyle": "line", "lineInterpolation": "linear" },
+          "unit": "percent"
+        },
+        "overrides": []
+      }
+    },
+    {
+      "id": 3,
+      "type": "timeseries",
+      "title": "Latency Percentiles (RED)",
+      "description": "P99 and Average response time for the selected service",
+      "gridPos": { "h": 8, "w": 8, "x": 16, "y": 0 },
+      "datasource": {
+        "type": "coremetry-datasource",
+        "uid": "coremetry"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "coremetry-datasource",
+            "uid": "coremetry"
+          },
+          "queryType": "red",
+          "service": "$service",
+          "redMetric": "p99"
+        },
+        {
+          "refId": "B",
+          "datasource": {
+            "type": "coremetry-datasource",
+            "uid": "coremetry"
+          },
+          "queryType": "red",
+          "service": "$service",
+          "redMetric": "avg"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "custom": { "drawStyle": "line", "lineInterpolation": "linear" },
+          "unit": "ms"
+        },
+        "overrides": []
+      }
+    },
+    {
+      "id": 4,
+      "type": "logs",
+      "title": "Service Logs",
+      "description": "Logs filtered by selected service with trace navigation",
+      "gridPos": { "h": 10, "w": 14, "x": 0, "y": 8 },
+      "datasource": {
+        "type": "coremetry-datasource",
+        "uid": "coremetry"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "coremetry-datasource",
+            "uid": "coremetry"
+          },
+          "queryType": "logs",
+          "service": "$service",
+          "limit": 100
+        }
+      ],
+      "options": {
+        "showLabels": true,
+        "wrapLogMessage": true,
+        "enableLogDetails": true,
+        "sortOrder": "Descending"
+      }
+    },
+    {
+      "id": 5,
+      "type": "table",
+      "title": "Service Traces",
+      "description": "Recent traces for the selected service with 1-click Tempo data links",
+      "gridPos": { "h": 10, "w": 10, "x": 14, "y": 8 },
+      "datasource": {
+        "type": "coremetry-datasource",
+        "uid": "coremetry"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "coremetry-datasource",
+            "uid": "coremetry"
+          },
+          "queryType": "traces",
+          "service": "$service",
+          "limit": 25
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "custom": { "align": "auto", "cellOptions": { "type": "auto" } }
+        },
+        "overrides": [
+          {
+            "matcher": { "id": "byName", "options": "duration_ms" },
+            "properties": [{ "id": "unit", "value": "ms" }]
+          }
+        ]
+      }
+    }
+  ],
+  "time": { "from": "now-6h", "to": "now" },
+  "timepicker": {},
+  "annotations": { "list": [] },
+  "links": []
+}

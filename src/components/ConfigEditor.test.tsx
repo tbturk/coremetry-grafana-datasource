@@ -65,4 +65,22 @@ describe('ConfigEditor', () => {
       })
     );
   });
+
+  it('configures trace datasource UID', () => {
+    const onOptionsChange = jest.fn();
+    const props = {
+      options: createOptions(),
+      onOptionsChange,
+    } satisfies Props;
+
+    render(<ConfigEditor {...props} />);
+    const traceInput = screen.getByLabelText('Trace datasource UID');
+    fireEvent.change(traceInput, { target: { value: 'tempo-custom-uid' } });
+
+    expect(onOptionsChange).toHaveBeenCalledWith(
+      expect.objectContaining({
+        jsonData: { traceDatasourceUid: 'tempo-custom-uid' },
+      })
+    );
+  });
 });

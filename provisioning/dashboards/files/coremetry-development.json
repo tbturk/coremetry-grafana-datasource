@@ -2,20 +2,146 @@
   "id": null,
   "uid": "coremetry-dev",
   "title": "Coremetry datasource development",
-  "tags": ["coremetry", "development"],
+  "tags": ["coremetry", "development", "metrics"],
   "timezone": "browser",
   "schemaVersion": 41,
-  "version": 1,
-  "refresh": "",
+  "version": 2,
+  "refresh": "1m",
   "panels": [
     {
       "id": 1,
-      "type": "text",
-      "title": "Datasource scaffold",
-      "gridPos": { "h": 6, "w": 24, "x": 0, "y": 0 },
-      "options": {
-        "mode": "markdown",
-        "content": "The Coremetry datasource is provisioned. Metric queries are intentionally not implemented in Phase 2."
+      "type": "timeseries",
+      "title": "Request Rate (HTTP)",
+      "description": "HTTP request rate grouped by service name",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
+      "datasource": {
+        "type": "coremetry-datasource",
+        "uid": "coremetry"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "coremetry-datasource",
+            "uid": "coremetry"
+          },
+          "rawQuery": "sum by(service_name) (rate(http.server.requests[5m]))",
+          "range": true,
+          "instant": false
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "linear",
+            "showPoints": "auto"
+          },
+          "unit": "reqps"
+        },
+        "overrides": []
+      }
+    },
+    {
+      "id": 2,
+      "type": "timeseries",
+      "title": "Error Rate (Authentication Failures)",
+      "description": "Rate of failed authentication logins per second",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
+      "datasource": {
+        "type": "coremetry-datasource",
+        "uid": "coremetry"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "coremetry-datasource",
+            "uid": "coremetry"
+          },
+          "rawQuery": "sum by(service_name) (rate(demo.auth.login_failed[5m]))",
+          "range": true,
+          "instant": false
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "linear",
+            "showPoints": "auto"
+          },
+          "unit": "errorsps"
+        },
+        "overrides": []
+      }
+    },
+    {
+      "id": 3,
+      "type": "timeseries",
+      "title": "Average Latency (HTTP Server Duration)",
+      "description": "Average HTTP request duration by service",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 },
+      "datasource": {
+        "type": "coremetry-datasource",
+        "uid": "coremetry"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "coremetry-datasource",
+            "uid": "coremetry"
+          },
+          "rawQuery": "avg by(service_name) (http.server.duration)",
+          "range": true,
+          "instant": false
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "linear",
+            "showPoints": "auto"
+          },
+          "unit": "ms"
+        },
+        "overrides": []
+      }
+    },
+    {
+      "id": 4,
+      "type": "timeseries",
+      "title": "Database Client Connections Usage",
+      "description": "Active database connections in use by service",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 8 },
+      "datasource": {
+        "type": "coremetry-datasource",
+        "uid": "coremetry"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "coremetry-datasource",
+            "uid": "coremetry"
+          },
+          "rawQuery": "avg by(service_name) (db.client.connections.usage)",
+          "range": true,
+          "instant": false
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "drawStyle": "line",
+            "lineInterpolation": "linear",
+            "showPoints": "auto"
+          },
+          "unit": "short"
+        },
+        "overrides": []
       }
     }
   ],

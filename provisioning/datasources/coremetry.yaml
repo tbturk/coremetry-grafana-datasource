@@ -6,7 +6,27 @@ datasources:
     uid: coremetry
     access: proxy
     url: http://coremetry:8088
+    isDefault: true
     editable: true
-    jsonData: {}
+    jsonData:
+      traceDatasourceUid: coremetry-tempo
     secureJsonData:
       apiToken: $__env{COREMETRY_API_TOKEN}
+
+  - name: Coremetry (Tempo)
+    type: tempo
+    uid: coremetry-tempo
+    access: proxy
+    url: http://coremetry:8088/tempo
+    editable: true
+    jsonData:
+      httpMethod: GET
+      tracesToLogs:
+        datasourceUid: coremetry
+        tags: ['service.name']
+        filterByTrace: true
+        filterBySpan: true
+      nodeGraph:
+        enabled: true
+      search:
+        hide: false

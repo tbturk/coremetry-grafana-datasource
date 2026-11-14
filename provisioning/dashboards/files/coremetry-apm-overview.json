@@ -1,0 +1,196 @@
+{
+  "id": null,
+  "uid": "coremetry-apm-overview",
+  "title": "Coremetry APM Overview",
+  "tags": ["coremetry", "apm", "overview"],
+  "timezone": "browser",
+  "schemaVersion": 41,
+  "version": 1,
+  "refresh": "1m",
+  "panels": [
+    {
+      "id": 1,
+      "type": "table",
+      "title": "Service Directory",
+      "description": "Active services discovered in Coremetry with throughput and error rate",
+      "gridPos": { "h": 9, "w": 24, "x": 0, "y": 0 },
+      "datasource": {
+        "type": "coremetry-datasource",
+        "uid": "coremetry"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "coremetry-datasource",
+            "uid": "coremetry"
+          },
+          "queryType": "services",
+          "limit": 50
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "auto",
+            "cellOptions": { "type": "auto" }
+          }
+        },
+        "overrides": [
+          {
+            "matcher": { "id": "byName", "options": "error_rate" },
+            "properties": [
+              { "id": "unit", "value": "percent" },
+              { "id": "custom.cellOptions", "value": { "type": "color-text" } },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    { "color": "green", "value": null },
+                    { "color": "yellow", "value": 1 },
+                    { "color": "red", "value": 5 }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": { "id": "byName", "options": "avg_duration_ms" },
+            "properties": [{ "id": "unit", "value": "ms" }]
+          },
+          {
+            "matcher": { "id": "byName", "options": "p99_duration_ms" },
+            "properties": [{ "id": "unit", "value": "ms" }]
+          }
+        ]
+      }
+    },
+    {
+      "id": 2,
+      "type": "timeseries",
+      "title": "Fleet Request Rate",
+      "description": "HTTP request throughput by service",
+      "gridPos": { "h": 8, "w": 8, "x": 0, "y": 9 },
+      "datasource": {
+        "type": "coremetry-datasource",
+        "uid": "coremetry"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "coremetry-datasource",
+            "uid": "coremetry"
+          },
+          "queryType": "metrics",
+          "rawQuery": "sum by(service_name) (rate(http.server.requests[5m]))",
+          "range": true,
+          "instant": false
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "custom": { "drawStyle": "line", "lineInterpolation": "linear" },
+          "unit": "reqps"
+        },
+        "overrides": []
+      }
+    },
+    {
+      "id": 3,
+      "type": "timeseries",
+      "title": "Fleet Error Rate",
+      "description": "Authentication failure rates by service",
+      "gridPos": { "h": 8, "w": 8, "x": 8, "y": 9 },
+      "datasource": {
+        "type": "coremetry-datasource",
+        "uid": "coremetry"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "coremetry-datasource",
+            "uid": "coremetry"
+          },
+          "queryType": "metrics",
+          "rawQuery": "sum by(service_name) (rate(demo.auth.login_failed[5m]))",
+          "range": true,
+          "instant": false
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "custom": { "drawStyle": "line", "lineInterpolation": "linear" },
+          "unit": "errorsps"
+        },
+        "overrides": []
+      }
+    },
+    {
+      "id": 4,
+      "type": "timeseries",
+      "title": "Average Duration",
+      "description": "Average HTTP server response time by service",
+      "gridPos": { "h": 8, "w": 8, "x": 16, "y": 9 },
+      "datasource": {
+        "type": "coremetry-datasource",
+        "uid": "coremetry"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "coremetry-datasource",
+            "uid": "coremetry"
+          },
+          "queryType": "metrics",
+          "rawQuery": "avg by(service_name) (http.server.duration)",
+          "range": true,
+          "instant": false
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "custom": { "drawStyle": "line", "lineInterpolation": "linear" },
+          "unit": "ms"
+        },
+        "overrides": []
+      }
+    },
+    {
+      "id": 5,
+      "type": "logs",
+      "title": "Recent Application Logs",
+      "description": "Live application logs streaming from Coremetry",
+      "gridPos": { "h": 10, "w": 24, "x": 0, "y": 17 },
+      "datasource": {
+        "type": "coremetry-datasource",
+        "uid": "coremetry"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "datasource": {
+            "type": "coremetry-datasource",
+            "uid": "coremetry"
+          },
+          "queryType": "logs",
+          "limit": 50
+        }
+      ],
+      "options": {
+        "showLabels": true,
+        "wrapLogMessage": true,
+        "enableLogDetails": true,
+        "sortOrder": "Descending"
+      }
+    }
+  ],
+  "time": { "from": "now-6h", "to": "now" },
+  "timepicker": {},
+  "templating": { "list": [] },
+  "annotations": { "list": [] },
+  "links": []
+}
